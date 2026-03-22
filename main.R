@@ -1,3 +1,6 @@
+if (!require("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+BiocManager::install("GSEABase")
 library('tidyverse')
 library('SummarizedExperiment')
 library('DESeq2')
@@ -39,8 +42,7 @@ make_se <- function(counts_csv, metafile_csv, selected_times) {
     )
     return(result)
 }
-se <- make_se('data/verse_counts.tsv', 'data/sample_metadata.csv', c('vP0', 'vAd'))
-class(se)
+
 
 
 #' Function that runs DESeq2 and returns a named list containing the DESeq2
@@ -70,7 +72,7 @@ return_deseq_res <- function(se, design) {
   ))
 }
 
-results <- return_deseq_res(se, ~ timepoint)
+
 
 
 
@@ -110,7 +112,7 @@ label_res <- function(deseq2_res, padj_threshold) {
     
     return(result)
 }
-labeled_results <- label_res(results, .10)
+
 
 
 #' Function to plot the unadjusted p-values as a histogram
