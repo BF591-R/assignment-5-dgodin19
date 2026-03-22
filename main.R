@@ -178,25 +178,21 @@ plot_log2fc <- function(labeled_results, padj_threshold) {
 #'
 #' @examples norm_counts_plot <- scatter_norm_counts(labeled_results, dds, 10)
 scatter_norm_counts <- function(labeled_results, dds_obj, num_genes){
+  # Function had an error with slice - only seems to work if the packages are called explicitly.
   labeled_results <- tibble::as_tibble(labeled_results)
   genes_to_plot <- labeled_results %>%
     dplyr::filter(!is.na(padj)) %>%
     dplyr::arrange(padj) %>%
     dplyr::slice_head(n = num_genes) %>%
     dplyr::pull(genes)
-  
- 
   norm_counts <- counts(dds_obj, normalized = TRUE)[genes_to_plot, , drop = FALSE]
-
   norm_counts_long <- as.data.frame(norm_counts) %>%
-    tibble::rownames_to_column("genes") %>%
-    tidyr::pivot_longer(
+    rownames_to_column("genes") %>%
+    pivot_longer(
       cols      = -genes,
       names_to  = "sample",
       values_to = "normalized_count"
     )
-  
-
   result <- ggplot(norm_counts_long, aes(x = genes, y = normalized_count, color = sample)) +
     geom_point() +
     theme_minimal() +
