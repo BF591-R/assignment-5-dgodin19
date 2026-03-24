@@ -283,7 +283,7 @@ run_fgsea <- function(gmt_file_path, rnk_list, min_size, max_size) {
     gene_sets <- getGmt(gmt_file_path, geneIdType=SymbolIdentifier())
     pathways <- lapply(gene_sets, geneIds)
     names(pathways) <- vapply(gene_sets, GSEABase::setName, character(1))
-    rnk_list <- is.finite(rnk_list) & !is.na(names(rnk_list)) 
+    rnk_list <- rnk_list[is.finite(rnk_list) & !is.na(names(rnk_list))] 
     result <- fgsea(pathways = pathways, stats = rnk_list,
        minSize = min_size, maxSize = max_size)
     result <- as_tibble(result)
